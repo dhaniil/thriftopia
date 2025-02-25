@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # thriftopia
 =======
 <div align="center">
@@ -180,3 +181,6 @@ Filament Starter is provided under the [MIT License](LICENSE.md).
 
 If you discover a bug, please [open an issue](https://github.com/riodwanto/superduper-filament-starter-kit/issues).
 >>>>>>> 0c8ccad (Initial commit)
+=======
+# Thriftopia
+>>>>>>> b451768 (Add README)
