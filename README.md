@@ -1,28 +1,28 @@
 # Thriftopia
 
-Thriftopia is a Laravel-based e-commerce platform for thrift shopping.
+Thriftopia adalah platform e-commerce berbasis Laravel buat jual-beli barang thrift.
 
-## Installation
+## Cara Install
 
-Follow these steps to set up the project:
+Ikuti langkah-langkah berikut ya:
 
-1. Clone the repository:
+1. Clone dulu repo-nya:
 ```bash
 git clone https://github.com/yourusername/thriftopia.git
 cd thriftopia
 ```
 
-2. Install PHP dependencies:
+2. Install dependency PHP:
 ```bash
 composer install
 ```
 
-3. Set up environment file:
+3. Siapkan file environment:
 ```bash
 cp .env.example .env
 ```
 
-4. Configure your database settings in `.env` file:
+4. Setting database di file `.env`:
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -32,38 +32,38 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 ```
 
-5. Generate application key:
+5. Generate key aplikasi:
 ```bash
 php artisan key:generate
 ```
 
-6. Run database migrations and seeders:
+6. Jalankan migration dan seeder:
 ```bash
 php artisan migrate --seed
 ```
 
-7. Install frontend dependencies and build assets:
+7. Install dependency frontend dan build assets:
 ```bash
 pnpm install
 pnpm run build
 ```
 
-8. Start the development server:
+8. Jalankan server:
 ```bash
 php artisan serve
 ```
 
-The application will be available at `http://localhost:8000`
+Aplikasi bisa diakses di `http://localhost:8000`
 
-## Default Admin Access
+## Akun Admin Default
 
-Use these credentials to access the admin panel at `/admin`:
+Buat masuk ke panel admin di `/admin`, bisa pakai akun ini:
 
 ```
 email: superadmin@starter-kit.com
 password: superadmin
 ```
 
-## License
+## Lisensi
 
-This project is licensed under the MIT License.
+Project ini dilindungi lisensi MIT.
