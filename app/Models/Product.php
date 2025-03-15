@@ -43,7 +43,7 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    // Helper method untuk mendapatkan gambar utama
+    // Helper untuk mendapatkan gambar utama
     public function getPrimaryImage(): ?string
     {
         $primaryImage = $this->images()->where('is_primary', true)->first();
@@ -52,7 +52,7 @@ class Product extends Model
             return $primaryImage->image_path;
         }
 
-        // Jika tidak ada gambar utama, ambil gambar pertama
+
         $firstImage = $this->images()->first();
 
         return $firstImage ? $firstImage->image_path : null;
