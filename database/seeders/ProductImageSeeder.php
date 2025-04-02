@@ -25,7 +25,7 @@ class ProductImageSeeder extends Seeder
             for ($i = 0; $i < $imageCount; $i++) {
                 ProductImage::create([
                     'product_id' => $product->id,
-                    'image' => $this->placeholderUrls[array_rand($this->placeholderUrls)] . '?random=' . rand(1, 1000),
+                    'image_path' => $this->placeholderUrls[array_rand($this->placeholderUrls)] . '?random=' . rand(1, 1000),
                     'is_primary' => $i === 0, // First image is primary
                 ]);
             }
