@@ -109,14 +109,14 @@
         "skipLibCheck": true /* Skip type checking all .d.ts files. */,
         "baseUrl": ".",
         "paths": {
-            "@/*": ["./resources/js/*"],
+            "@/*": ["./resources/js/thriftopia/*"],
             "ziggy-js": ["./vendor/tightenco/ziggy"]
         },
         "jsx": "react-jsx"
     },
     "include": [
-        "resources/js/**/*.ts",
-        "resources/js/**/*.d.ts",
-        "resources/js/**/*.tsx",
+        "resources/js/thriftopia/**/*.ts",
+        "resources/js/thriftopia/**/*.d.ts",
+        "resources/js/thriftopia/**/*.tsx",
     ]
 }
