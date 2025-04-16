@@ -23,6 +23,10 @@ const badgeVariants = cva(
           "bg-black text-white rounded-full px-2 text-xs font-medium",
         accordion:
           " text-gray-500 rounded-sm cursor-pointer border-0 px-1 text-xs font-normal",
+        size2:
+          " bg-transparent text-black cursor-pointer  px-4 py-2 text-sm font-normal",
+        category:
+          " bg-gray-200 text-black cursor-pointer rounded-full px-3 border-gray-400 py-2 text-xs font-normal",
       },
     },
     defaultVariants: {

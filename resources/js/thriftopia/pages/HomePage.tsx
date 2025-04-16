@@ -2,7 +2,7 @@ import Navbar from "@/components/navigation/navbar";
 import Footer from "@/components/navigation/footer";
 import { Head, Link } from '@inertiajs/react';
 import Carousel from "@/components/carousel";
-import {ShowProducts, Kategori, ListProducts} from "@/components/product/show-product";
+import {SloganProducts, Kategori, ListProducts} from "@/components/product/show-product";
 import WhyChoose from "@/components/other/why-choose";
 // import { useEffect } from "react";
 
@@ -24,7 +24,7 @@ export default function HomePage() {
         {/* Kategori Section */}
         <Kategori/>
 
-        <ShowProducts/>
+        <SloganProducts/>
 
         {/* List Produk */}
         <ListProducts/>

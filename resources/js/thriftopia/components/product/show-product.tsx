@@ -13,7 +13,6 @@ import {
     PaginationPrevious,
   } from "@/components/ui/pagination"
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-  
 import KategoriProducts from './category-product/category-product';
   
 import "swiper/css/effect-coverflow";
@@ -37,7 +36,14 @@ import { PiPantsLight } from "react-icons/pi";
 import { TbShoe } from "react-icons/tb";
 import { GiPearlNecklace } from "react-icons/gi";
 import { Ellipsis } from 'lucide-react';
+import { ListBaseProps } from 'node_modules/@ark-ui/react/dist/components/tabs/tabs';
 
+interface ListProductsProps {
+    title?: string;
+    subTitle?: string;
+    showFilter?: boolean;
+    products: { title: string; price: number; size: string; image: string }[];
+    }
 
 function Kategori() {
     return (
@@ -50,7 +56,7 @@ function Kategori() {
     );
 }
 
-function ShowProducts () {
+function SloganProducts () {
 
     return (
         <>
@@ -71,8 +77,9 @@ function ShowProducts () {
     )
 }
 
-function ListProducts() {
-    const products = [
+function ListProducts({ title = "Jelajahi", showFilter = true, subTitle="Temukan Gaya Terbaikmu!" , products }: ListProductsProps) {
+
+    const IsiProduct = [
         { title: 'Kaos Polos Oblong Pendek Soft Combed 30s', price: 20000, size: "XL", image: kaos },
         { title: 'Kemeja Polos Lengan Panjang Trendy Murah', price: 20000, size: "XLL", image: kemeja },
         { title: 'Sepatu Formal Fulture Corduroy Black', price: 20000, size: "M", image: sepatu },
@@ -95,7 +102,9 @@ function ListProducts() {
         <>
         <div className='md:px-12'>
         <div className='px-8 mb-4'>
-            <h1 className='text-black text-2xl font-extrabold'>Jelajahi</h1>
+            <h1 className='text-black text-2xl font-extrabold'>{title}</h1>
+
+            {showFilter && (
             <div className='flex  gap-4 mt-4'>
             <Select>
             <SelectTrigger className="w-[180px]">
@@ -119,13 +128,14 @@ function ListProducts() {
             </SelectContent>
             </Select>
             </div>
+            )}
         </div>
         <Card className="pt-4 md:rounded-xl">
-            <CardTitle className='text-lg md:text-2xl font-extrabold px-8'>
-            Temukan Gaya Terbaikmu!
+            <CardTitle className='text-xl md:text-2xl font-extrabold px-8'>
+            {subTitle}
             </CardTitle>
             <div className='bg-white grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 w-full my-4 rounded-2xl p-2 md:gap-y-6 gap-2'>
-            {products.map((product, index) => (
+            {IsiProduct.map((product, index) => (
                 <CardContent key={index} className="flex flex-col items-center justify-center space-y-4 px-0 ">
                     <div className="flex flex-wrap gap-4 justify-center">
                         <div className="bg-white shadow-lg rounded-lg overflow-hidden md:w-50 h-73 p-4 relative hover:scale-101 transition-all duration-300 will-change-transform">
@@ -177,5 +187,5 @@ function ListProducts() {
         </>
     )
 }
-export { ShowProducts, Kategori, ListProducts };
+export { SloganProducts, Kategori, ListProducts };
 

@@ -12,6 +12,10 @@ Route::get('/kategori', function () {
     return Inertia::render('Categories');
 })->name('kategori');
 
+Route::get('/detail', function () {
+    return Inertia::render('DetailProduct');
+})->name('detail');
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route::get('dashboard', function () {
