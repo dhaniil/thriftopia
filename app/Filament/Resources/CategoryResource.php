@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CategoryResource\Pages;
+use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -10,54 +11,50 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static ?string $navigationIcon = 'heroicon-o-folder';
 
-    protected static ?string $navigationGroup = 'Katalog';
-
-    protected static ?int $navigationSort = 1;
+    protected static ?string $navigationGroup = 'Kategori';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Card::make()
-                    ->schema([
-                        Forms\Components\TextInput::make('name')
-                            ->required()
-                            ->live(debounce: 1000)
-                            ->maxLength(255)
-                            ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
+                ->schema([
 
-                        Forms\Components\TextInput::make('slug')
-                            ->disabled()
-                            ->dehydrated(),
+                    Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->live(onBlur: true) // biar slug bisa auto-generate
+                    ->afterStateUpdated(fn ($state, callable $set) => 
+                        $set('slug', \Str::slug($state))
+                    ),
 
-                        Forms\Components\Select::make('parent_id')
-                            ->label('Kategori Induk')
-                            ->options(function () {
-                                return Category::all()->pluck('name', 'id');
-                            })
-                            ->searchable(),
-                        Forms\Components\Section::make('Image Kategori')
-                            ->columns(1)
-                            ->description('Image yang mewakili kategori')
-                            ->schema([
-                                Forms\Components\FileUpload::make('image')
-                                    ->label('Gambar')
-                                    ->image()
-                                    ->imageEditor(true)
-                                    ->directory('categories'),
-                            ]),
-                        Forms\Components\Toggle::make('is_active')
-                            ->label('Aktif')
-                            ->default(true),
-                    ]),
+                Forms\Components\TextInput::make('slug')
+                    ->required()
+                    ->unique(ignoreRecord: true),
+
+                Forms\Components\Select::make('parent_id')
+                    ->label('Parent Category')
+                    ->options(Category::whereNull('parent_id')->pluck('name', 'id'))
+                    ->searchable()
+                    ->nullable(),
+
+                Forms\Components\FileUpload::make('image')
+                    ->image()
+                    ->directory('category-images')
+                    ->nullable(),
+
+                Forms\Components\Toggle::make('is_active')
+                    ->label('Active')
+                    ->default(true),
+                    
+                ])
             ]);
     }
 
@@ -65,40 +62,19 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->label('Nama')
-                    ->searchable()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('parent.name')
-                    ->label('Kategori Induk')
-                    ->default('-')
-                    ->sortable(),
-
-                Tables\Columns\ImageColumn::make('image')
-                    ->label('Gambar'),
-
+                Tables\Columns\TextColumn::make('name')->searchable(),
+                Tables\Columns\TextColumn::make('slug'),
+                Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\IconColumn::make('is_active')
-                    ->label('Status')
-                    ->boolean()
-                    ->sortable(),
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('parent_id')
-                    ->label('Kategori Induk')
-                    ->options(function () {
-                        return Category::all()->pluck('name', 'id');
-                    })
-                    ->placeholder('Semua'),
-
-                Tables\Filters\Filter::make('is_active')
-                    ->label('Aktif')
-                    ->toggle()
-                    ->query(fn (Builder $query): Builder => $query->where('is_active', true)),
+                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

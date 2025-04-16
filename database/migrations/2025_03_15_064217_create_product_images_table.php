@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->string('image_path');
-            $table->boolean('is_primary')->default(false);
+            $table->boolean('is_primary')->default(false); // sesuai fillable di model
             $table->timestamps();
         });
     }

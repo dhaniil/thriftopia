@@ -10,9 +10,19 @@ class Attribute extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'type',
+        'is_required',
+        'predefined_values'
+    ];
 
-    public function values(): HasMany
+    protected $casts = [
+        'is_required' => 'boolean',
+        'predefined_values' => 'array'
+    ];
+
+    public function attributeValues(): HasMany
     {
         return $this->hasMany(AttributeValue::class);
     }

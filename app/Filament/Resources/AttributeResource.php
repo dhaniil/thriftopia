@@ -9,44 +9,73 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Repeater;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
 
 class AttributeResource extends Resource
 {
     protected static ?string $model = Attribute::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-adjustments-horizontal';
-
-    protected static ?string $navigationGroup = 'Katalog';
-
+    protected static ?string $navigationGroup = 'Produk';
     protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\Card::make()
+        return $form->schema([
+            Card::make()->schema([
+                TextInput::make('name')
+                    ->label('Nama Atribut')
+                    ->required()
+                    ->unique(ignoreRecord: true),
+                Select::make('type')
+                    ->label('Tipe Input')
+                    ->options([
+                        'select' => 'Dropdown',
+                        'color' => 'Color Picker',
+                        'text' => 'Text Input'
+                    ])
+                    ->required(),
+                Toggle::make('is_required')
+                    ->label('Wajib Diisi')
+                    ->default(true),
+                Repeater::make('predefined_values')
+                    ->label('Nilai Predefined')
                     ->schema([
-                        Forms\Components\TextInput::make('name')
-                            ->label('Nama Atribut')
+                        TextInput::make('value')
+                            ->label('Nilai')
                             ->required()
-                            ->maxLength(255),
-                    ]),
-            ]);
+                    ])
+                    ->columnSpanFull()
+                    ->visible(fn ($get) => $get('type') === 'select')
+            ])
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->label('Nama Atribut')
+                TextColumn::make('name')
+                    ->label('Nama')
                     ->searchable()
                     ->sortable(),
-
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('type')
+                    ->label('Tipe')
+                    ->sortable(),
+                IconColumn::make('is_required')
+                    ->label('Wajib')
+                    ->boolean()
+                    ->sortable(),
+                TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
             ])
             ->filters([
                 //
@@ -60,13 +89,6 @@ class AttributeResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array

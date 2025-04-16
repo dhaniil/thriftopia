@@ -4,6 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <!-- Favicon -->
+        <link rel="icon" media="(prefers-color-scheme: light)" type="image/webp" href="/Tlogo-b.ico">
+        <link rel="icon" media="(prefers-color-scheme: dark)" type="image/png" href="Tlogo-w.ico">
+
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
             (function() {
@@ -37,7 +41,7 @@
 
         @routes
         @viteReactRefresh
-        @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
+        @vite(['resources/css/app.css', 'resources/js/thriftopia/app.tsx'])
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
