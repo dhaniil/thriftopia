@@ -8,18 +8,21 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('reviews', function (Blueprint $table) {
+        Schema::create('shipping_addresses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->integer('rating')->check('rating between 1 and 5');
-            $table->text('comment')->nullable();
+            $table->string('name');
+            $table->string('phone', 20);
+            $table->text('address');
+            $table->string('city', 100);
+            $table->string('postal_code', 10);
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('reviews');
+        Schema::dropIfExists('shipping_addresses');
     }
 };
