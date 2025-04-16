@@ -1,0 +1,18 @@
+name: Discord Notification
+
+on:
+  push:
+    branches:
+      - main  # ganti dengan branch yang kamu inginkan
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord notification
+        uses: tsickert/discord-webhook@v5
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          content: |
+            🚀 Push baru ke **${{ github.repository }}** oleh **${{ github.actor }}**
+            👉 Commit: ${{ github.event.head_commit.message }}
