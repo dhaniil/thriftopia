@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Discord notification
-        uses: tsickert/discord-webhook@v4
+        uses: tsickert/discord-webhook@v5.4.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           content: |
