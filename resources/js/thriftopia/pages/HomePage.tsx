@@ -1,12 +1,26 @@
 import Navbar from "@/components/navigation/navbar";
 import Footer from "@/components/navigation/footer";
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import Carousel from "@/components/carousel";
-import {SloganProducts, Kategori, ListProducts} from "@/components/product/show-product";
+import {SloganProducts, ListProducts} from "@/components/product/show-product";
+import KategoriProducts from "@/components/product/category-product/category-product";
 import WhyChoose from "@/components/other/why-choose";
 // import { useEffect } from "react";
 
-export default function HomePage() {
+interface Props {
+  banners: Array<{
+    title: string;
+    description: string;
+    image_path: string;
+  }>;
+  categories: Array<{
+    name: string;
+    slug: string;
+    image: string;
+  }>;
+}
+
+export default function HomePage({ banners, categories }: Props) {
   return (
     <>
       <Head title="Gaya Irit, Tetap Keren!" />
@@ -17,12 +31,9 @@ export default function HomePage() {
       
       <main className="flex-grow container space-y-5 md:space-y-10 mx-auto mt-20 mb-25 md:mt-40">
         {/* Carousel Atas */}
-        <Carousel />
-        {/* <Link href={route("kategori")}>
-        <p className="text-black p-4 bg-gray-300">kategori</p>
-        </Link> */}
+        <Carousel banners={banners} />
         {/* Kategori Section */}
-        <Kategori/>
+        <KategoriProducts categories={categories} />
 
         <SloganProducts/>
 

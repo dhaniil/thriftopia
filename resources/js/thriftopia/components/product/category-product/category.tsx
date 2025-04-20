@@ -65,6 +65,7 @@ const Baju = () => {
                                             src={baju.image} 
                                             className="w-full h-35 object-cover" 
                                             alt="Jacket" 
+                                            loading='lazy'
                                         />
                                         {/* <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" /> */}
                                     </div>

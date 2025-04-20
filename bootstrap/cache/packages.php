@@ -104,6 +104,13 @@
       0 => 'Laravel\\Sail\\SailServiceProvider',
     ),
   ),
+  'laravel/sanctum' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Sanctum\\SanctumServiceProvider',
+    ),
+  ),
   'laravel/socialite' => 
   array (
     'aliases' => 
@@ -120,6 +127,17 @@
     'providers' => 
     array (
       0 => 'Laravel\\Tinker\\TinkerServiceProvider',
+    ),
+  ),
+  'laravolt/avatar' => 
+  array (
+    'aliases' => 
+    array (
+      'Avatar' => 'Laravolt\\Avatar\\Facade',
+    ),
+    'providers' => 
+    array (
+      0 => 'Laravolt\\Avatar\\ServiceProvider',
     ),
   ),
   'livewire/livewire' => 
@@ -170,6 +188,13 @@
     'providers' => 
     array (
       0 => 'RyanChandler\\BladeCaptureDirective\\BladeCaptureDirectiveServiceProvider',
+    ),
+  ),
+  'spatie/laravel-permission' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Spatie\\Permission\\PermissionServiceProvider',
     ),
   ),
   'tightenco/ziggy' => 

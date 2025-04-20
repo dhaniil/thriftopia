@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('product_variants', function (Blueprint $table) {
             // Drop existing columns that will be handled by attribute values
-            $table->dropColumn(['size', 'color']);
+            // $table->dropColumn(['size', 'color']);
             
             // Add new columns
             $table->string('sku')->unique()->after('product_id');
