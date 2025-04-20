@@ -1,26 +1,32 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Autoplay } from "swiper/modules";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
+
+import axios from "axios";
+
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
-// import "swiper/css/navigation";
-// import "swiper/css/pagination";
 
+interface Banner {
+  title: string;
+  description: string;
+  image_path: string;
+}
 
-const movies = [
-  { title: "Justice League", image: "https://i.pinimg.com/736x/4c/6a/93/4c6a93819a285733c206039a1fd1f0ce.jpg" },
-  { title: "Justice League", image: "https://i.pinimg.com/736x/4c/6a/93/4c6a93819a285733c206039a1fd1f0ce.jpg" },
-  { title: "Justice League", image: "https://i.pinimg.com/736x/4c/6a/93/4c6a93819a285733c206039a1fd1f0ce.jpg" },
-  { title: "Justice League", image: "https://i.pinimg.com/736x/4c/6a/93/4c6a93819a285733c206039a1fd1f0ce.jpg" },
-  { title: "Justice League", image: "https://i.pinimg.com/736x/4c/6a/93/4c6a93819a285733c206039a1fd1f0ce.jpg" },
-  // { title: "Guardians of the Galaxy", image: "https://i.pinimg.com/736x/78/93/4f/78934fc7f30fc1e3a3ea54cd14f46041.jpg" },
-  // { title: "Spider-Man", image: "https://i.pinimg.com/736x/4c/6a/93/4c6a93819a285733c206039a1fd1f0ce.jpg" },
-  // { title: "Avengers", image: "https://i.pinimg.com/736x/ce/69/7b/ce697be0112d8be66c81dc79d37d5607.jpg" },
-];
+interface CarouselProps {
+  banners: Banner[];
+}
 
-const Carousel = () => {
+const Carousel = ({ banners }: CarouselProps) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // const [isLoading, setIsLoading] = useState(true);
+
+  // const handleImageLoad = () => {
+  //   setIsLoading(false);
+  // };
 
   useEffect(() => {
     const handleResize = () => {
@@ -30,11 +36,13 @@ const Carousel = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+
+
   return (
     <div className="flex justify-center items-center w-full px-4 md:px-6 lg:px-8 ">
       <Swiper
         effect={isMobile ? "slide" : "coverflow"}
-        grabCursor={true}
+        grabCursor={false}
         centeredSlides={true}
         loop={true}
         initialSlide={1}
@@ -62,13 +70,17 @@ const Carousel = () => {
         resistanceRatio={0.65}
         className="w-screen max-w-none h-full min-h-[100px] max-h-[600px] transition-all rounded-lg"
       >
-        {movies.map((movie, index) => (
+        {banners.map((banner, index) => (
+          
           <SwiperSlide key={index} className="w-full h-full relative overflow-hidden">
+            {/* {isLoading && (
+              <Skeleton className="absolute inset-0 w-full h-full" />
+            )} */}
             <img
-              src={movie.image}
-              alt={movie.title}
+              src={`/storage/${banner.image_path}`}
+              alt={banner.title}
               loading="lazy"
-              className="w-full h-full object-cover rounded-lg "
+              className="w-full h-full object-cover rounded-lg brightness-100 contrast-100 "
             />
           </SwiperSlide>
         ))}

@@ -1,7 +1,5 @@
 import { useRef } from "react";
-import { HugeiconsIcon } from '@hugeicons/react';
-import { LongSleeveShirtIcon, RunningShoesIcon, ShortsPantsIcon } from '@hugeicons/core-free-icons';
-// import { FaQuestion } from "react-icons/fa6";
+import { FaFireAlt } from "react-icons/fa";
 
 import { Navigation, Pagination, EffectCards } from 'swiper/modules';
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -9,11 +7,11 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import type { Swiper as SwiperType } from 'swiper';
 import {Card, CardContent} from "@/components/ui/card"
 import { ArrowLeft, ArrowRight, icons } from 'lucide-react';
-import jacket from "@/assets/example-product/jacket-hijau.webp"
-import Catjacket from "@/assets/example-category/Cat-Jacket.jpg"
-import Catjeans from "@/assets/example-category/Cat-Jeans.jpg"
-import Catsepatu from "@/assets/example-category/Cat-Sepatu.webp"
-import kemeja from "@/assets/example-product/kemeja.webp"
+// import jacket from "@/assets/example-product/jacket-hijau.webp"
+// import Catjacket from "@/assets/example-category/Cat-Jacket.jpg"
+// import Catjeans from "@/assets/example-category/Cat-Jeans.jpg"
+// import Catsepatu from "@/assets/example-category/Cat-Sepatu.webp"
+// import kemeja from "@/assets/example-product/kemeja.webp"
 
 
 import "swiper/css";
@@ -21,21 +19,20 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-function KategoriProducts() {
-    const bajus = [
-        {title: "Sepatu", image: Catsepatu, icon: RunningShoesIcon},
-        {title: "Jeans", image: Catjeans, icon: ShortsPantsIcon},
-        {title: "Jacket", image: Catsepatu, icon: LongSleeveShirtIcon},
-        {title: "Sepatu", image: Catsepatu, icon: RunningShoesIcon},
-        {title: "Jeans", image: Catjeans, icon: ShortsPantsIcon},
-        {title: "Jacket", image: Catsepatu, icon: LongSleeveShirtIcon},
-        {title: "Sepatu", image: Catsepatu, icon: RunningShoesIcon},
-        {title: "Jeans", image: Catjeans, icon: ShortsPantsIcon},
-        {title: "Jacket", image: Catsepatu, icon: LongSleeveShirtIcon},
-    ]
+interface Category {
+    name: string;
+    slug: string;
+    image: string;
+  }
+  
+  interface CategoryProps {
+    categories: Category[];
+  }
+
+const KategoriProducts = ({ categories }: CategoryProps) => {
     const isMobile = useIsMobile();
 
-    console.log('Mobile:', isMobile)
+    // console.log('Mobile:', isMobile)
 
 
           const swiperRef = useRef<SwiperType | null>(null);
@@ -75,31 +72,29 @@ function KategoriProducts() {
             onBeforeInit={(swiper) => {
                 swiperRef.current = swiper;
               }}
-            className='fashion-swiper w-full rounded-lg items-center flex h-full md:h-70 py-20'
+            className='fashion-swiper w-full rounded-lg items-center flex h-full md:h-40 lg:h-70 py-20'
             >
-            {bajus.map((baju, index) => (
+            {categories.map((category, index) => (
                 <SwiperSlide key={index} className="flex flex-col w-full justify-center items-center rounded-xl ">
                 <div className='flex justify-center items-center transform cursor-pointer'>
-                    <Card className="md:bg-black w-full md:w-56 md:h-70 p-0 text-black justify-center shadow-lg  rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                    <Card className="md:bg-black h-full w-full lg:w-56 lg:h-70 p-0 text-black justify-center shadow-lg  rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                     <CardContent className="px-0">
                     {isMobile ? (
                         <div className="h-10 w-full space-x-1 flex justify-center items-center bg-transparent rounded-lg border-1 ">
-                            <HugeiconsIcon
-                                icon={baju.icon || LongSleeveShirtIcon}
-                                size={15}>
-                            </HugeiconsIcon>    
-                            <p className="text-black text-sm font-semibold">{baju.title}</p>
+                            <FaFireAlt/>
+                            <p className="text-black text-sm font-semibold">{category.name}</p>
                         </div>
                     ) : (
                         <div className="relative overflow-hidden group flex justify-center items-center will-change-transform transition-all duration-300 hover:scale-103 ">
                             <img 
-                                src={baju.image} 
-                                className="w-full h-70 object-cover transition duration-300 ease-in-out group-hover:opacity-70" 
-                                alt={baju.title} 
+                                src={`/storage/${category.image}`}
+                                className="w-full md:h-40 lg:h-70 object-cover transition duration-300 ease-in-out group-hover:opacity-70 will-change-transform" 
+                                alt={category.name} 
+                                // loading="lazy"
                             />
                             <div className="absolute inset-0 flex items-center justify-center bg-opacity-0 group-hover:bg-opacity-50 transition duration-300">
-                                <p className="text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition duration-300">
-                                {baju.title}
+                                <p className="text-white lg:text-lg font-semibold opacity-0 group-hover:opacity-100 transition duration-300 transform translate-y-4 group-hover:translate-y-0">
+                                {category.name}
                                 </p>
                             </div>
                         </div>

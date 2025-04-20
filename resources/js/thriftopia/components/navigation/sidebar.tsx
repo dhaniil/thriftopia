@@ -16,7 +16,10 @@ export default function Sidebar() {
     <Card className="w-full h-full max-h-85 bg-white gap-4">
         <CardHeader className="flex-col">
             <div className='w-18 h-18 mx-auto object-cover'>
-                <Avatar name={auth.user?.name ?? ''} ></Avatar>
+            <Avatar 
+                name={auth.user?.name ?? ''} 
+                imageUrl={auth.user?.avatar_url}
+            />
             </div>
             <div>
             <CardTitle className="text-sm">{auth.user?.name}</CardTitle>

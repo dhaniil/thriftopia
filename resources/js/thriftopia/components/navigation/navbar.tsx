@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import Cart from "@/components/ui/cart";
 import thriftopia from '@/assets/icon/thriftopia.webp';
-import sigma from '@/assets/icon/sigma.webp';
 import profile from '@/assets/icon/dummy-profile.webp';
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,6 @@ import SubNav from "@/components/navigation/sub-nav"
 import { FaRegUser } from "react-icons/fa";
 import { HiMiniBars3 } from "react-icons/hi2";
 import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetFooter } from "@/components/ui/sheet";
-import { Link, useForm } from "@inertiajs/react";
 import Avatar from "@/components/profile-menu/avatar";
 import { 
     IoSearch, 
@@ -170,7 +168,10 @@ export default function Navbar() {
                                                 <SheetHeader>
                                                     <div className="flex gap-2 cursor-pointer">
                                                         <div className="w-12 h-12">
-                                                        <Avatar name={auth.user.name} ></Avatar>
+                                                        <Avatar 
+                                                            name={auth.user?.name ?? ''} 
+                                                            imageUrl={auth.user?.avatar_url}
+                                                        /> 
                                                         </div>
                                                         <div className="flex flex-col justify-center">
                                                             <div className="w-40">
@@ -248,8 +249,10 @@ export default function Navbar() {
                                         <DropdownMenuTrigger asChild className="cursor-pointer hidden md:flex items-center space-x-2 mx-2 z-50">
                                             <div className="bg-gray-200 p-0.5 rounded-md hover:scale-101 hover:bg-gray-300 transition-all duration-200 will-change-transform flex items-center">
                                                 <div className="p-1 rounded-full w-10 h-10 m-0">
-                                                    <Avatar name={auth.user.name} ></Avatar>
-                                                    {/* <img src={sigma} className="" /> */}
+                                                <Avatar 
+                                                    name={auth.user?.name ?? ''} 
+                                                    imageUrl={auth.user?.avatar_url}
+                                                />                                                    
                                                 </div>    
                                                 <div className=" hidden md:flex px-2 w-auto max-w-32 ">
                                                     <p className="text-black font-medium text-xs whitespace-nowrap overflow-hidden text-ellipsis">
@@ -262,8 +265,11 @@ export default function Navbar() {
                                         <DropdownMenuContent className="w-64 bg-white z-50" sideOffset={5} collisionPadding={20}>
                                             <DropdownMenuLabel className="flex items-center space-x-2 cursor-pointer">
                                                 <div className="w-10 h-10">
-                                                    <Avatar name={auth.user.name} ></Avatar>
-                                                </div>
+                                                <Avatar 
+                                                name={auth.user?.name ?? ''} 
+                                                imageUrl={auth.user?.avatar_url}
+                                            />                                               
+                                             </div>
                                                 <div className="flex flex-col">
                                                     <div className="w-40">
                                                         <span className="text-black font-bold block whitespace-nowrap overflow-hidden text-ellipsis">

@@ -37,6 +37,7 @@ import { TbShoe } from "react-icons/tb";
 import { GiPearlNecklace } from "react-icons/gi";
 import { Ellipsis } from 'lucide-react';
 import { ListBaseProps } from 'node_modules/@ark-ui/react/dist/components/tabs/tabs';
+import Categories from '@/pages/Categories';
 
 interface ListProductsProps {
     title?: string;
@@ -45,12 +46,20 @@ interface ListProductsProps {
     products: { title: string; price: number; size: string; image: string }[];
     }
 
-function Kategori() {
+    interface Props {
+    categories: Array<{
+        name: string;
+        slug: string;
+        image: string;
+        }>;
+    }
+
+function Kategori({categories}: Props) {
     return (
         <>
         <div>
             {/* <h1 className='text-black font-bold md:text-xl mb-4 px-12'>Kategori Terpopuler</h1> */}
-            <KategoriProducts/>
+            <KategoriProducts categories={categories}/>
         </div>
         </>
     );

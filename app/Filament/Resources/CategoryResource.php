@@ -25,36 +25,56 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Card::make()
+                Forms\Components\Grid::make(2)
                 ->schema([
+                    Forms\Components\Group::make()
+                        ->schema([
+                        Forms\Components\Section::make("Informasi Kategori")
+                        ->description('Masukkan Informasi Kategori.')
 
-                    Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->live(onBlur: true) // biar slug bisa auto-generate
-                    ->afterStateUpdated(fn ($state, callable $set) => 
-                        $set('slug', \Str::slug($state))
-                    ),
+                        ->schema([
+                            Forms\Components\TextInput::make('name')
+                                ->label('Nama Kategori')
+                                ->required()
+                                ->live(onBlur: true) // biar slug bisa auto-generate
+                                ->afterStateUpdated(fn ($state, callable $set) => 
+                                    $set('slug', \Str::slug($state))
+                            ),
+                            Forms\Components\TextInput::make('slug')
+                                ->required()
+                                ->unique(ignoreRecord: true),
 
-                Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->unique(ignoreRecord: true),
-
-                Forms\Components\Select::make('parent_id')
-                    ->label('Parent Category')
-                    ->options(Category::whereNull('parent_id')->pluck('name', 'id'))
-                    ->searchable()
-                    ->nullable(),
-
-                Forms\Components\FileUpload::make('image')
-                    ->image()
-                    ->directory('category-images')
-                    ->nullable(),
-
-                Forms\Components\Toggle::make('is_active')
-                    ->label('Active')
-                    ->default(true),
+                            Forms\Components\Select::make('parent_id')
+                                ->label('Parent Kategori')
+                                ->options(Category::whereNull('parent_id')->pluck('name', 'id'))
+                                ->searchable()
+                                ->nullable(),
+                            Forms\Components\Card::make('Status Kategori')
+                                ->schema([
+                                    Forms\Components\Toggle::make('is_active')
+                                        ->label('Aktif')
+                                        ->default(true),
+                                ]),
+                    ]),
                     
-                ])
+                ]),
+
+                Forms\Components\Group::make()
+                    ->schema([
+                        Forms\Components\Card::make()
+                            ->schema([
+                            Forms\Components\FileUpload::make('image')
+                                ->label('Gambar')
+                                ->image()
+                                ->required()
+                                ->directory('category-images')
+                                ->nullable(),
+                            ]),
+                    ]),
+            ]),
+
+                
+                    
             ]);
     }
 
@@ -67,8 +87,8 @@ class CategoryResource extends Resource
                 Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                // Tables\Columns\TextColumn::make('created_at')
+                //     ->dateTime(),
             ])
             ->filters([
                 //

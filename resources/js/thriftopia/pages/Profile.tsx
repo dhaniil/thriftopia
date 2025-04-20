@@ -1,6 +1,6 @@
 import Navbar from "@/components/navigation/navbar";
 import Footer from "@/components/navigation/footer";
-import ProfileContent from "@/components/profile";
+import ProfileContent from "@/components/profile-menu/profile";
 import { Head } from '@inertiajs/react';
 
 
