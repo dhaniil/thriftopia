@@ -1,62 +1,51 @@
-import React from "react";
-import sigma from '../../assets/icon/sigma.webp';
-import jacket from '../../assets/example-product/jacket-hijau.webp';
+import { Link } from "@inertiajs/react";
+import type { CartItem } from "@/types/cart";
+import { formatPrice } from "@/lib/utils";
 
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
+interface CartProps {
+  items: CartItem[];
 }
 
-const cartItems: CartItem[] = [
-  {
-    id: 1,
-    name: "Keycaps PBT Dye Sub BoW",
-    price: 250000,
-    quantity: 1,
-    image: sigma, 
-  },
-  {
-    id: 1,
-    name: "Keycaps PBT Dye Sub BoW",
-    price: 250000,
-    quantity: 1,
-    image: jacket, 
-  },
-];
+export default function Cart({ items }: CartProps) {
+  const total = items.reduce((acc, item) => {
+    return acc + (item.product.price * item.quantity);
+  }, 0);
 
-const Cart: React.FC = () => {
-  return (
-    <div className="p-4">
-      <div className="flex justify-between items-center">
-        <h2 className="font-bold text-lg">
-          Keranjang <span className="text-black font-normal">(2)</span>
-        </h2>
-        <a href={route('cart')} className="text-gray-500 font-semibold text-sm">
-          Detail
-        </a>
+  if (items.length === 0) {
+    return (
+      <div className="text-center p-4">
+        <p className="text-gray-500">Keranjang belanja Anda kosong</p>
       </div>
+    );
+  }
 
-      {cartItems.map((item) => (
-        <div key={item.id} className="flex items-center gap-4 mt-3 border-b-1 pb-3 border-gray-200">
+  return (
+    <div className="w-full max-h-96 overflow-auto">
+      {items.map((item) => (
+        <div key={item.id} className="flex items-start gap-4 p-4 border-b last:border-b-0">
           <img
-            src={item.image}
-            alt={item.name}
-            className="w-12 h-12 rounded-md object-cover"
+            src={item.product.image}
+            alt={item.product.name}
+            className="w-16 h-16 object-cover rounded"
           />
-          <div className="flex-1">
-            <p className="text-sm text-gray-700 truncate">{item.name}</p>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-medium truncate">{item.product.name}</h3>
+            <p className="text-sm text-gray-500">{formatPrice(item.product.price)}</p>
+            <p className="text-sm text-gray-500">Jumlah: {item.quantity}</p>
           </div>
-          <p className="font-bold text-black">
-            {item.quantity} x Rp{item.price.toLocaleString()}
-          </p>
-          
         </div>
       ))}
+      
+      <div className="sticky bottom-0 bg-white p-4 border-t">
+        <div className="flex justify-between items-center mb-4">
+          <span className="text-gray-500">Total</span>
+          <span className="font-bold">{formatPrice(total)}</span>
+        </div>
+        
+        <Link href="/cart" className="text-gray-500 font-semibold text-sm">
+          Lihat Keranjang
+        </Link>
+      </div>
     </div>
   );
-};
-
-export default Cart;
+}

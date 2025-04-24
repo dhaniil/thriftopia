@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useForm } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import {Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import { FloatInput } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,10 +22,11 @@ export default function Login({
   open,
   onOpenChange,
 }: LoginProps) {
-  const { data, setData, post, processing } = useForm({
+  const [data, setData] = useState({
     email: "",
     password: "",
   });
+  const [processing, setProcessing] = useState(false);
 
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState<{ email?: string; password?: string }>({});
@@ -46,15 +47,21 @@ export default function Login({
     }
 
     setError({});
+    setProcessing(true);
 
-    post(route("login"), {
+    router.post('/login', data, {
       preserveScroll: true,
-      onError: (errors) => {
+      onError: (errors: any) => {
         setError({
           email: errors.email ? "Email yang Anda masukkan salah." : undefined,
           password: errors.password ? "Password yang Anda masukkan salah." : undefined,
         });
+        setProcessing(false);
       },
+      onSuccess: () => {
+        setProcessing(false);
+        onOpenChange(false);
+      }
     });
   };
 
@@ -92,7 +99,7 @@ export default function Login({
                     label="Email"
                     type="email"
                     value={data.email}
-                    onChange={(value) => setData("email", value)}
+                    onChange={(value) => setData(prev => ({ ...prev, email: value }))}
                   />
                 </span>
                   {error.email && <p className="text-xs text-red-600">{error.email}</p>}
@@ -105,7 +112,7 @@ export default function Login({
                     label="Password"
                     type={visible ? "text" : "password"}
                     value={data.password}
-                    onChange={(value) => setData("password", value)}
+                    onChange={(value) => setData(prev => ({ ...prev, password: value }))}
                   />
                   <Button
                     variant="link"

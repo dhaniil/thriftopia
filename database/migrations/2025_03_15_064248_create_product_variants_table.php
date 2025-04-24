@@ -13,6 +13,8 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->string('sku')->unique();
             $table->decimal('price', 10, 2);
+            $table->string('size');
+            $table->string('color');
             $table->integer('stock')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

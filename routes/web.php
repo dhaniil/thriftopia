@@ -1,50 +1,30 @@
 <?php
 
-// use App\Http\Controllers\LandingPageController;
-use App\Http\Controllers\AvatarController;
-use App\Models\Banner;
-use App\Models\User;
-use App\Models\Category;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () { return Inertia::render('HomePage',[ 
-'banners' => Banner::where('is_active', true)
-    ->select('title', 'description', 'image_path')
-    ->get(),
+Route::get('/', [ProductController::class, 'index'])->name('home');
 
-'categories' => Category::where('is_active', true)
-    ->whereNotNull('parent_id')
-    ->select('name', 'slug', 'image')
-    ->get()
-]); 
+Route::middleware(['auth'])->group(function () {
+    // Cart Routes
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart', [CartController::class, 'store']);
+    Route::patch('/cart/{id}', [CartController::class, 'update']);
+    Route::delete('/cart/{id}', [CartController::class, 'destroy']);
 
-})->name('home');
-
-
-
-Route::get('/kategori', function () { return Inertia::render('Categories');
-})->name('kategori');
-
-Route::get('/detail', function () { return Inertia::render('DetailProduct');
-})->name('detail');
-
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('profile', function () {
-        return Inertia::render('Profile');
-    })->name('profile');
-    Route::post('profile/update', [AvatarController::class, 'updateProfile'])->name('profile.update');
-    Route::post('profile/avatar', [AvatarController::class, 'uploadAvatar'])->name('profile.avatar');
-    Route::get('cart', function () {
-        return Inertia::render('Cart');
-    })->name('cart');
+    // Payment Routes
+    Route::post('/payment/create', [PaymentController::class, 'create'])->name('payment.create');
+    Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/payment/error', [PaymentController::class, 'error'])->name('payment.error');
+    Route::get('/payment/pending', [PaymentController::class, 'pending'])->name('payment.pending');
 });
 
+// Midtrans Notification Handler
+Route::post('/payment/notification', [PaymentController::class, 'notification'])
+    ->name('payment.notification');
 
-
-
-require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

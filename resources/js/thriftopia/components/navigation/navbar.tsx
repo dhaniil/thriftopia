@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link, router, usePage } from "@inertiajs/react";
 import Cart from "@/components/ui/cart";
 import thriftopia from '@/assets/icon/thriftopia.webp';
 import profile from '@/assets/icon/dummy-profile.webp';
@@ -41,16 +42,14 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { usePage } from '@inertiajs/react';
-import { logout } from '@/lib/auth';
-import type { User } from '@/types';
+import type { PageProps } from '@inertiajs/core';
 
 export default function Navbar() {
     const [openDialog, setOpenDialog] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
     const [canHoverCart, setCanHoverCart] = useState(true);
     const [loginOpen, setLoginOpen] = useState(false);
-    const auth = usePage().props.auth as { user: User | null };
+    const { auth, cart } = usePage<PageProps>().props;
 
     useEffect(() => {
         setCanHoverCart(!openDropdown);
@@ -64,7 +63,7 @@ export default function Navbar() {
     };
 
     const handleLogoutConfirm = () => {
-        logout();
+        router.post('/logout');
         setOpenDialog(false);
     };
 
@@ -75,7 +74,6 @@ export default function Navbar() {
         "Tas Skena",
     ];
     
-
     const [placeholder, setPlaceholder] = useState(placeholders[0]);
     const [index, setIndex] = useState(0);
     
@@ -115,12 +113,11 @@ export default function Navbar() {
     return (
         <div className="relative overflow-visible">
             <header className="bg-white w-full flex shadow-md justify-center items-center overflow-visible">
-            {/*backup lg:top-4 top-0 lg:w-[93rem] w-full */}
                 <nav className="bg-[#f8f8f8] lg:top-4 top-0 lg:w-[93rem] w-full fixed lg:shadow-md  z-40 border-gray-300 rounded-sm overflow-visible"> 
                     <div className="container mx-auto flex justify-between py-4 px-4 lg:px-25 border-b-1 border-gray-300 items-center">
-                        <a href={route('home')} className="text-2xl font-bold text-gray-900 dark:text-white">
+                        <Link href="/" className="text-2xl font-bold text-gray-900 dark:text-white">
                             <img src={thriftopia} alt="Brand Logo" className="h-12 w-auto hidden md:flex" draggable='false' />
-                        </a>
+                        </Link>
                         <div className="flex"></div>
                         
                         <div className="items-center space-x-4 justify-center">
@@ -136,21 +133,22 @@ export default function Navbar() {
                                         Cari
                                     </Button>
                                 </span>
-                               
                             </div>
                         </div>
                         
                         <div className="space-x-2">
                             <div className="flex md:w-70 justify-end items-center space-x-2 cursor-pointer">
                                 <HoverCard open={canHoverCart ? undefined : false}>
-                                    <HoverCardTrigger href={route('cart')} asChild>
-                                        <div className={`flex items-center space-x-2 md:border-r-2 mr-0 sm:mr-0 md:mr-1 px-4 border-gray-300 ${canHoverCart ? 'cursor-pointer' : 'pointer-events-none'}`}>
+                                    <HoverCardTrigger asChild>
+                                        <Link href="/cart" className={`flex items-center space-x-2 md:border-r-2 mr-0 sm:mr-0 md:mr-1 px-4 border-gray-300 ${canHoverCart ? 'cursor-pointer' : 'pointer-events-none'}`}>
                                             <IoCartOutline className="text-gray-500 text-3xl mr-1" />
-                                            <span className="absolute top-5 bg-[#1a1a1a] text-white text-[0.60rem] font-bold w-4 h-4 flex items-center justify-center rounded-full">
-                                                4
-                                            </span>
+                                            {cart.count > 0 && (
+                                                <span className="absolute top-5 bg-[#1a1a1a] text-white text-[0.60rem] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                                                    {cart.count}
+                                                </span>
+                                            )}
                                             <p className="text-black text-sm">Cart</p>
-                                        </div>
+                                        </Link>
                                     </HoverCardTrigger>
                                     <HoverCardContent align="end" className="bg-white p-4 rounded-md shadow-md hidden md:flex text-black">
                                         <Cart />
@@ -186,21 +184,21 @@ export default function Navbar() {
                                                 <div className="bg-border border-1 border-gray-100 rounded mx-4"></div>
 
                                                 <nav className="flex flex-col space-y-2 px-4">
-                                                    <a href="#" className="gap-2 items-center hover:bg-gray-200 justify-between rounded p-2 transition-all flex text-black cursor-pointer">
+                                                    <Link href="/cart" className="gap-2 items-center hover:bg-gray-200 justify-between rounded p-2 transition-all flex text-black cursor-pointer">
                                                         <div className="flex items-center gap-2">
                                                             <IoCartOutline />
                                                             Keranjang Saya
                                                         </div>
-                                                        <Badge variant="amount">4</Badge>
-                                                    </a>
-                                                    <a href={route('profile')} className="gap-2 items-center hover:bg-gray-200 rounded p-2 transition-all2 flex text-black cursor-pointer">
+                                                        <Badge variant="amount">{cart.count}</Badge>
+                                                    </Link>
+                                                    <Link href="/profile" className="gap-2 items-center hover:bg-gray-200 rounded p-2 transition-all2 flex text-black cursor-pointer">
                                                         <FaRegUser />
                                                         Profile Saya
-                                                    </a>
-                                                    <a href="#" className="gap-2 items-center hover:bg-gray-200 rounded p-2 transition-all flex text-black cursor-pointer">
+                                                    </Link>
+                                                    <Link href="#" className="gap-2 items-center hover:bg-gray-200 rounded p-2 transition-all flex text-black cursor-pointer">
                                                         <IoSettingsOutline />
                                                         Pengaturan
-                                                    </a>
+                                                    </Link>
                                                 </nav>
                                                 <SheetFooter>
                                                     <Button 
@@ -232,7 +230,7 @@ export default function Navbar() {
                                                 <div className="bg-border border-1 border-gray-100 rounded mx-4"></div>
 
                                                 <div className="w-full justify-center flex items-center space-x-2 px-2">
-                                                    <Login open={loginOpen} onOpenChange={setLoginOpen} buttonClassName="w-full border-1" />
+                                                    <Login open={loginOpen} onOpenChange={setLoginOpen} buttonClassName="w-full border-1 bg-white" />
                                                     <Register buttonClassName="w-full border-1" />
                                                 </div>
                                             </SheetContent>
@@ -282,24 +280,28 @@ export default function Navbar() {
                                             <DropdownMenuSeparator />
                                             <div className="flex justify-center w-full">
                                                 <div className="border-r-1 border-gray-200 p-1">
-                                                    <DropdownMenuRadioItem href={route("cart")} className="text-center px-4 bg-gray-200 flex rounded cursor-pointer text-black text-xs" value="">
-                                                        Keranjang: 4
+                                                    <DropdownMenuRadioItem className="text-center px-4 bg-gray-200 flex rounded cursor-pointer text-black text-xs" value="">
+                                                        <Link href="/cart">Keranjang: {cart.count}</Link>
                                                     </DropdownMenuRadioItem>
                                                 </div>
                                                 <div className="border-l-1 border-gray-200 p-1">
-                                                    <DropdownMenuRadioItem href={route('profile')}  className="text-center px-4 flex text-black rounded cursor-pointer" value="">
-                                                         <FaRegUser/>
-                                                         Profil Saya
+                                                    <DropdownMenuRadioItem className="text-center px-4 flex text-black rounded cursor-pointer" value="">
+                                                        <Link href="/profile" className="flex items-center gap-2">
+                                                            <FaRegUser />
+                                                            Profil Saya
+                                                        </Link>
                                                     </DropdownMenuRadioItem>
-                                                    <DropdownMenuRadioItem href={route('profile')} className="text-center px-4 flex text-black rounded cursor-pointer" value="">
-                                                        <IoSettingsOutline/>
-                                                        Pengaturan
+                                                    <DropdownMenuRadioItem className="text-center px-4 flex text-black rounded cursor-pointer" value="">
+                                                        <Link href="#" className="flex items-center gap-2">
+                                                            <IoSettingsOutline />
+                                                            Pengaturan
+                                                        </Link>
                                                     </DropdownMenuRadioItem>
                                                     <DropdownMenuRadioItem 
                                                         onClick={handleLogoutClick}
                                                         className="text-center px-4 flex text-black cursor-pointer rounded" 
                                                         value="">
-                                                        <IoLogOutOutline/>
+                                                        <IoLogOutOutline />
                                                         Logout
                                                     </DropdownMenuRadioItem>
                                                 </div>

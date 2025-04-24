@@ -1,25 +1,18 @@
-import React from 'react';
-import { IoCartOutline } from 'react-icons/io5';
-import { Link } from '@inertiajs/react';
-import { useTypedPage } from '@/hooks/use-typed-page';
+import { Link } from "@inertiajs/react";
+import { IoCartOutline } from "react-icons/io5";
 
 interface CartIconProps {
+  count: number;
   className?: string;
 }
 
-export function CartIcon({ className = '' }: CartIconProps) {
-  const { auth, cartCount = 0 } = useTypedPage().props;
-
-  if (!auth.user) {
-    return null;
-  }
-
+export default function CartIcon({ count, className = "" }: CartIconProps) {
   return (
-    <Link href={route('cart')} className={`relative ${className}`}>
-      <IoCartOutline className="text-2xl" />
-      {cartCount > 0 && (
-        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-          {cartCount}
+    <Link href="/cart" className={`relative ${className}`}>
+      <IoCartOutline className="text-gray-500 text-3xl" />
+      {count > 0 && (
+        <span className="absolute -top-2 -right-2 bg-[#1a1a1a] text-white text-[0.60rem] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+          {count}
         </span>
       )}
     </Link>

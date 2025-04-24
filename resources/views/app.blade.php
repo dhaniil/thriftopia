@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- Favicon -->
-        <link rel="icon" media="(prefers-color-scheme: light)" type="image/webp" href="/Tlogo-b.ico">
-        <link rel="icon" media="(prefers-color-scheme: dark)" type="image/png" href="Tlogo-w.ico">
+        <link rel="icon" media="(prefers-color-scheme: light)" type="image/webp" href="/TLogo-b.ico">
+        <link rel="icon" media="(prefers-color-scheme: dark)" type="image/png" href="TLogo-w.ico">
 
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
@@ -39,7 +39,14 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
-        @routes
+        <!-- Midtrans Client Script -->
+        <script type="text/javascript" 
+            src="{{ config('midtrans.is_production') 
+                ? 'https://app.midtrans.com/snap/snap.js'
+                : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
+            data-client-key="{{ config('midtrans.client_key') }}">
+        </script>
+
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/thriftopia/app.tsx'])
         @inertiaHead
