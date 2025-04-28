@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { CartItem } from "@/types/cart";
+import type { MidtransResult, MidtransCallback } from "@/types/midtrans";
 import { router } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -14,10 +15,14 @@ export default function ShowCart({ items = [] }: Props) {
     const [isProcessing, setIsProcessing] = useState(false);
 
     useEffect(() => {
-        const newTotal = items.reduce((acc, item) => {
-            return acc + (item.product.price * item.quantity);
-        }, 0);
-        setTotal(newTotal);
+        if (items && items.length > 0) {
+            const newTotal = items.reduce((acc, item) => {
+                return acc + (item.product.price * item.quantity);
+            }, 0);
+            setTotal(newTotal);
+        } else {
+            setTotal(0);
+        }
     }, [items]);
 
     const handleQuantityChange = (id: number, quantity: number) => {
@@ -32,38 +37,56 @@ export default function ShowCart({ items = [] }: Props) {
         });
     };
 
-    const handlePayment = async () => {
-        setIsProcessing(true);
-        try {
-            const response = await fetch('/payment/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                }
-            });
+    interface PaymentProps {
+        snap_token: string;
+    }
 
-            const { snap_token } = await response.json();
-            
-            window.snap.pay(snap_token, {
-                onSuccess: function() {
-                    router.visit('/payment/success');
-                },
-                onPending: function() {
-                    router.visit('/payment/pending');
-                },
-                onError: function() {
-                    router.visit('/payment/error');
-                },
-                onClose: function() {
+    const handlePayment = () => {
+        setIsProcessing(true);
+        
+        router.post('/payment/create', {}, {
+            preserveScroll: true,
+            onSuccess: (response: any) => {
+                const snap_token = response.props.snap_token;
+
+                if (!window.snap) {
+                    toast.error('Snap.js is not loaded');
                     setIsProcessing(false);
+                    return;
                 }
-            });
-        } catch (error) {
-            console.error('Payment error:', error);
-            toast.error('Terjadi kesalahan saat memproses pembayaran');
-            setIsProcessing(false);
-        }
+
+                if (!snap_token) {
+                    toast.error('Failed to get payment token');
+                    setIsProcessing(false);
+                    return;
+                }
+
+                const snapCallback: MidtransCallback = {
+                    onSuccess: (result: MidtransResult) => {
+                        console.log('Payment success:', result);
+                        router.visit('/payment/success');
+                    },
+                    onPending: (result: MidtransResult) => {
+                        console.log('Payment pending:', result);
+                        router.visit('/payment/pending');
+                    },
+                    onError: (result: MidtransResult) => {
+                        console.error('Payment error:', result);
+                        router.visit('/payment/error');
+                    },
+                    onClose: () => {
+                        console.log('Payment dialog closed');
+                        setIsProcessing(false);
+                    }
+                };
+
+                window.snap.pay(snap_token, snapCallback as any);
+            },
+            onError: () => {
+                toast.error('Terjadi kesalahan saat memproses pembayaran');
+                setIsProcessing(false);
+            }
+        });
     };
 
     if (!items || items.length === 0) {

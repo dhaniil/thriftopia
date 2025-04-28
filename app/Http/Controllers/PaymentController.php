@@ -30,12 +30,20 @@ class PaymentController extends Controller
             return response()->json(['error' => 'Cart is empty'], 400);
         }
 
+        $defaultAddress = $user->defaultShippingAddress;
+        if (!$defaultAddress) {
+            return response()->json(['error' => 'Please set your shipping address'], 400);
+        }
+
         $order = Order::create([
             'user_id' => $user->id,
             'total_amount' => $cartItems->sum(function ($item) {
                 return $item->product->price * $item->quantity;
             }),
-            'status' => 'pending'
+            'status' => 'pending',
+            'shipping_address_id' => $defaultAddress->id,
+            'payment_method' => 'midtrans',
+            'shipping_status' => 'pending'
         ]);
 
         foreach ($cartItems as $item) {
@@ -53,14 +61,8 @@ class PaymentController extends Controller
         ]);
 
         $snapToken = $this->midtrans->createTransaction([
-            'transaction_details' => [
-                'order_id' => $payment->id,
-                'gross_amount' => $payment->amount,
-            ],
-            'customer_details' => [
-                'first_name' => $user->name,
-                'email' => $user->email,
-            ],
+            'order_id' => $payment->id,
+            'gross_amount' => $payment->amount
         ]);
 
         return response()->json(['snap_token' => $snapToken]);

@@ -13,6 +13,10 @@ class Order extends Model
         'user_id',
         'total_amount',
         'status',
+        'shipping_address_id',
+        'payment_method',
+        'shipping_status',
+        'tracking_number'
     ];
 
     protected $casts = [
@@ -32,5 +36,10 @@ class Order extends Model
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
+    }
+
+    public function shippingAddress(): BelongsTo
+    {
+        return $this->belongsTo(ShippingAddress::class);
     }
 }

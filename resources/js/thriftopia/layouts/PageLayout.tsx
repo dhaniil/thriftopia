@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { router, usePage } from "@inertiajs/react";
 import { AnimatePresence, motion } from "framer-motion";
 import LoadingSpinner from "@/components/ui/loading";
-import FlashMessage from "@/components/flash-message";
+
 
 export default function PageLayout({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       {loading && <LoadingSpinner />}
-      <FlashMessage />
+
       {children}
     </>
   );

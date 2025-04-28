@@ -16,7 +16,7 @@ class CartController extends Controller
             ->get();
 
         return Inertia::render('Cart', [
-            'items' => $items
+            'items' => $items->toArray()
         ]);
     }
 

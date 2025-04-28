@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -63,13 +65,28 @@ class User extends Authenticatable
         return asset('storage/' . $this->avatar);
     }
 
-    public function orders()
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
 
-    public function reviews()
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function shippingAddresses(): HasMany
+    {
+        return $this->hasMany(ShippingAddress::class);
+    }
+
+    public function defaultShippingAddress(): HasOne
+    {
+        return $this->hasOne(ShippingAddress::class)->where('is_default', true);
+    }
+
+    public function getDefaultShippingAddressAttribute(): ?ShippingAddress
+    {
+        return $this->defaultShippingAddress()->first();
     }
 }

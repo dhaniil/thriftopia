@@ -24,8 +24,16 @@ class MidtransService
             ? 'https://app.midtrans.com/snap/v1/transactions'
             : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
 
-        $response = Http::withBasicAuth($this->serverKey, '')
-            ->post($baseUrl, $params);
+        $response = Http::withBasicAuth($this->serverKey, $this->clientKey)
+            ->post($baseUrl, [
+                'transaction_details' => [
+                    'order_id' => $params['order_id'],
+                    'gross_amount' => (int)$params['gross_amount']
+                ],
+                'credit_card' => [
+                    'secure' => true
+                ]
+            ]);
 
         if ($response->successful()) {
             return $response->json('token');
