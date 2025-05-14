@@ -6,7 +6,7 @@ use App\Filament\Resources\ProductImageResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListProductImages extends ListRecords
+class ListProductImage extends ListRecords
 {
     protected static string $resource = ProductImageResource::class;
 

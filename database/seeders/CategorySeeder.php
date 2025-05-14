@@ -4,55 +4,52 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class CategorySeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        $categories = [
-            'Pakaian' => [
-                'Atasan' => ['Kaos', 'Kemeja', 'Sweater', 'Jaket'],
-                'Bawahan' => ['Celana Panjang', 'Celana Pendek', 'Rok'],
-                'Dress' => ['Mini Dress', 'Midi Dress', 'Maxi Dress'],
-                'Outerwear' => ['Cardigan', 'Hoodie', 'Blazer']
-            ],
-            'Sepatu' => [
-                'Sneakers' => ['Casual', 'Sport', 'Vintage'],
-                'Formal' => ['Pantofel', 'Loafers'],
-                'Sandal' => ['Slip On', 'Strap']
-            ],
-            'Aksesoris' => [
-                'Tas' => ['Backpack', 'Sling Bag', 'Tote Bag'],
-                'Topi' => ['Baseball Cap', 'Bucket Hat', 'Beanie'],
-                'Perhiasan' => ['Kalung', 'Gelang', 'Cincin']
-            ]
-        ];
+        // Parent Categories
+        $tshirt = Category::create([
+            'name' => 'T-Shirt',
+            'slug' => 'tshirt',
+            'is_active' => true
+        ]);
 
-        foreach ($categories as $mainCategory => $subCategories) {
-            $main = Category::create([
-                'name' => $mainCategory,
-                'slug' => Str::slug($mainCategory),
-                'is_active' => true,
-            ]);
+        $pants = Category::create([
+            'name' => 'Pants',
+            'slug' => 'pants',
+            'is_active' => true
+        ]);
 
-            foreach ($subCategories as $subCategory => $items) {
-                $sub = Category::create([
-                    'name' => $subCategory,
-                    'slug' => Str::slug($subCategory),
-                    'parent_id' => $main->id,
-                    'is_active' => true,
-                ]);
+        // Child Categories for T-Shirt
+        Category::create([
+            'name' => 'Polo Shirt',
+            'slug' => 'polo-shirt',
+            'parent_id' => $tshirt->id,
+            'is_active' => true
+        ]);
 
-                foreach ($items as $item) {
-                    Category::create([
-                        'name' => $item,
-                        'slug' => Str::slug($item),
-                        'parent_id' => $sub->id,
-                        'is_active' => true,
-                    ]);
-                }
-            }
-        }
+        Category::create([
+            'name' => 'Casual Shirt',
+            'slug' => 'casual-shirt',
+            'parent_id' => $tshirt->id,
+            'is_active' => true
+        ]);
+
+        // Child Categories for Pants
+        Category::create([
+            'name' => 'Jeans',
+            'slug' => 'jeans',
+            'parent_id' => $pants->id,
+            'is_active' => true
+        ]);
+
+        Category::create([
+            'name' => 'Chino',
+            'slug' => 'chino',
+            'parent_id' => $pants->id,
+            'is_active' => true
+        ]);
     }
 }

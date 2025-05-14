@@ -3,95 +3,65 @@
 namespace Database\Seeders;
 
 use App\Models\Product;
+use App\Models\ProductImage;
+use App\Models\ProductVariant;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        $products = [
-            // Pakaian - Atasan
-            [
-                'name' => 'Vintage Levi\'s Denim Jacket',
-                'description' => 'Jaket denim klasik Levi\'s dari era 90-an. Kondisi masih sangat bagus dengan patina yang cantik. Label merah masih terjaga.',
-                'category_name' => 'Jaket',
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Champion Reverse Weave Sweater',
-                'description' => 'Sweater Champion original tahun 80-an. Bahan tebal dan hangat. Kondisi 9/10 dengan sedikit fade yang menambah karakter.',
-                'category_name' => 'Sweater',
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Tommy Hilfiger Stripe Shirt',
-                'description' => 'Kemeja Tommy Hilfiger vintage dengan motif stripe. Bahan katun yang nyaman. Kondisi 8/10.',
-                'category_name' => 'Kemeja',
-                'is_active' => true,
-            ],
-            
-            // Pakaian - Bawahan
-            [
-                'name' => 'Dickies 874 Work Pants',
-                'description' => 'Celana kerja Dickies klasik. Bahan tebal dan tahan lama. Kondisi 9/10.',
-                'category_name' => 'Celana Panjang',
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Levi\'s 501 Vintage Jeans',
-                'description' => 'Jeans Levi\'s 501 vintage dengan wash yang cantik. Kondisi 8/10 dengan distressing alami.',
-                'category_name' => 'Celana Panjang',
-                'is_active' => true,
-            ],
-            
-            // Sepatu
-            [
-                'name' => 'Nike Air Force 1 Vintage',
-                'description' => 'Nike AF1 vintage dalam kondisi 8/10. Sole masih bagus, upper terawat.',
-                'category_name' => 'Casual',
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Converse Chuck 70s High',
-                'description' => 'Converse Chuck 70s High vintage. Kondisi 9/10 dengan patina yang bagus pada sole.',
-                'category_name' => 'Casual',
-                'is_active' => true,
-            ],
-            
-            // Aksesoris
-            [
-                'name' => 'Vintage Coach Leather Bag',
-                'description' => 'Tas Coach kulit vintage tahun 90-an. Kulit tebal dengan patina yang cantik.',
-                'category_name' => 'Tote Bag',
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Ralph Lauren Canvas Backpack',
-                'description' => 'Backpack Ralph Lauren vintage dari kanvas. Kondisi 8/10, hardware masih bagus.',
-                'category_name' => 'Backpack',
-                'is_active' => true,
-            ],
-            [
-                'name' => 'New Era Yankees Cap 90s',
-                'description' => 'Topi New Era Yankees vintage 90s. Kondisi 9/10, patch masih jelas.',
-                'category_name' => 'Baseball Cap',
-                'is_active' => true,
-            ]
-        ];
+        $categories = Category::whereNotNull('parent_id')->get();
 
-        foreach ($products as $productData) {
-            $category = Category::where('name', $productData['category_name'])->first();
-            
-            if ($category) {
+        foreach ($categories as $category) {
+            // Array of CDN image URLs for products
+            $imageUrls = [
+                'https://i.ibb.co/C6pJ0Xk/tshirt-1.jpg',
+                'https://i.ibb.co/fDvs2Gy/tshirt-2.jpg',
+                'https://i.ibb.co/BLgcNx2/tshirt-3.jpg',
+                'https://i.ibb.co/TmXCrXj/tshirt-4.jpg',
+                'https://i.ibb.co/dKKFXdZ/tshirt-5.jpg',
+                'https://i.ibb.co/xgZxrRb/pants-1.jpg',
+                'https://i.ibb.co/GV0gdHw/pants-2.jpg',
+                'https://i.ibb.co/7CQVJNm/pants-3.jpg',
+                'https://i.ibb.co/dpNVXPp/pants-4.jpg',
+                'https://i.ibb.co/wS6ZFr7/pants-5.jpg',
+            ];
+
+            // Create 10 products for each child category
+            for ($i = 1; $i <= 10; $i++) {
                 $product = Product::create([
-                    'name' => $productData['name'],
-                    'description' => $productData['description'],
+                    'name' => "Product {$i} - {$category->name}",
+                    'slug' => Str::slug("Product {$i} - {$category->name}"),
+                    'description' => "Description for Product {$i} in category {$category->name}",
+                    'price' => rand(50000, 500000),
+                    'stock' => 0, // Stock will be managed through variants
                     'category_id' => $category->id,
-                    'is_active' => $productData['is_active'],
-                    'slug' => Str::slug($productData['name'])
+                    'is_active' => true,
                 ]);
+
+                // Create image for product
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => $imageUrls[array_rand($imageUrls)],
+                    'is_primary' => true
+                ]);
+
+                // Create variants with different sizes
+                $sizes = ['S', 'M', 'L', 'XL'];
+                foreach ($sizes as $size) {
+                    ProductVariant::create([
+                        'product_id' => $product->id,
+                        'sku' => strtoupper(Str::random(8)),
+                        'price' => $product->price,
+                        'size' => $size,
+                        'color' => 'Default',
+                        'stock' => rand(5, 20),
+                        'is_active' => true
+                    ]);
+                }
             }
         }
     }

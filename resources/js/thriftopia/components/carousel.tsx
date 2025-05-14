@@ -3,17 +3,12 @@ import { EffectCoverflow, Autoplay } from "swiper/modules";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 
-import axios from "axios";
 
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 
-interface Banner {
-  title: string;
-  description: string;
-  image_path: string;
-}
+import type { Banner } from "@/types/banner";
 
 interface CarouselProps {
   banners: Banner[];

@@ -6,7 +6,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Database\Seeder;
 
-class ProductImageSeeder extends Seeder
+class ProductImageeeder extends Seeder
 {
     private $placeholderUrls = [
         'https://picsum.photos/800/1000', // Portrait

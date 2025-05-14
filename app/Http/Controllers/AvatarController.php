@@ -2,63 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laravolt\Avatar\Facade as Avatar;
-use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
 
 class AvatarController extends Controller
 {
-    public function generate(Request $request)
+    public function show(Request $request)
     {
-        $name = $request->query('name', 'User');
-
-        $avatar = Avatar::create($name)->toBase64();
-
-        return response()->json([
-            'avatar' => $avatar
-        ]);
-    }
-
-    public function updateProfile(Request $request)
-    {
-        $user = auth()->user();
-        
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-        ]);
-
-        $user->update($validated);
-
-        return back()->with('message', 'Profile berhasil diperbarui');
-    }
-
-    public function uploadAvatar(Request $request)
-    {
-        $request->validate([
-            'avatar' => 'required|image|mimes:jpeg,png,jpg|max:2048'
-        ]);
-
-        $user = auth()->user();
-
-        if ($request->hasFile('avatar')) {
-            // Hapus avatar lama jika ada
-            if ($user->avatar) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-
-            // Upload avatar baru
-            $path = $request->file('avatar')->store('avatars', 'public');
+        try {
+            $name = $request->query('name', 'User');
             
-            $user->update([
-                'avatar' => $path
+            $avatar = Avatar::create($name)->toBase64();
+            
+            // Remove data:image/png;base64, prefix
+            $imageData = base64_decode(substr($avatar, 22));
+            
+            return response($imageData)
+                ->header('Content-Type', 'image/png')
+                ->header('Cache-Control', 'public, max-age=3600');
+            
+        } catch (\Exception $e) {
+            Log::error('Avatar generation error', [
+                'error' => $e->getMessage(),
+                'name' => $name ?? 'N/A'
             ]);
-
-            return back()->with('message', 'Avatar berhasil diperbarui');
+            
+            // Generate default avatar
+            try {
+                $avatar = Avatar::create('User')->toBase64();
+                $imageData = base64_decode(substr($avatar, 22));
+                
+                return response($imageData)
+                    ->header('Content-Type', 'image/png')
+                    ->header('Cache-Control', 'public, max-age=3600');
+                    
+            } catch (\Exception $e2) {
+                Log::error('Default avatar generation failed', [
+                    'error' => $e2->getMessage()
+                ]);
+                return response()->noContent(404);
+            }
         }
-
-        return back()->with('error', 'Tidak ada file yang diupload');
     }
 }
