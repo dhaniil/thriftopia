@@ -9,15 +9,25 @@ class Payment extends Model
 {
     protected $fillable = [
         'order_id',
-        'amount',
+        'gross_amount',
         'status',
         'payment_type',
-        'paid_at'
+        'payment_method',
+        'transaction_id',
+        'snap_token',
+        'redirect_url',
+        'pdf_url',
+        'status_code',
+        'payload_response',
+        'paid_at',
+        'expired_at'
     ];
 
     protected $casts = [
-        'amount' => 'integer',
-        'paid_at' => 'datetime'
+        'gross_amount' => 'decimal:2',
+        'paid_at' => 'datetime',
+        'expired_at' => 'datetime',
+        'payload_response' => 'json'
     ];
 
     public function order(): BelongsTo

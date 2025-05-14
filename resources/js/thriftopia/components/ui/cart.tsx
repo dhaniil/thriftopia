@@ -6,8 +6,8 @@ interface CartProps {
   items: CartItem[];
 }
 
-export default function Cart({ items }: CartProps) {
-  const total = items.reduce((acc, item) => {
+export default function Cart({ items = [] }: CartProps) {
+  const total = (items || []).reduce((acc, item) => {
     return acc + (item.product.price * item.quantity);
   }, 0);
 
